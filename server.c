@@ -19,7 +19,6 @@ void commun(int sock){
 		DieWithError("recv()filed");
 	buf[len_r] = '\0';
 	printf("%s\n",buf);
-	send(sock,buf,strlen(buf),0);
 	if(send(sock,buf,strlen(buf),0)!=strlen(buf))
 	DieWithError("send()sent a message of unexpected bytes");
 }
