@@ -15,13 +15,29 @@ void DieWithError(char *errorMessage){
 void commun(int sock){
 	char buf[BUF_SIZE];
 	int len_r;
-	char *message = "‚¨•Ô‚µ‚Å‚·!";
+	char response[BUF_SIZE];
 	
-	if((len_r = recv(sock,buf,BUF_SIZE,0))<=0)
-		DieWithError("recv()filed");
+	while((len_r = recv(sock,buf,BUF_SIZE,0)) > 0){  /*0‚æ‚è‘å‚«‚¢ŠÔ*/
+		
+		buf[len_r] = '\0';
+		printf("%s\n",buf);
+		
+		if(strstr(buf, "\r\n\r\n")){
+			printf("received HTTP Request \n");
+			break;
+		}
+	}
 	
-	buf[len_r] = '\0';
-	printf("%s\n",buf);
+	if(len_r <=0)
+		DieWithError("received()filed");
+
+	printf(response, "HTTP/1.1 200 OK\r\n");
+	if(send(sock,response,strlen(response),0)!=strlen(buf))
+	DieWithError("send()sent a message of unexpected bytes");
+	/* 
+		char *message = "‚¨•Ô‚µ‚Å‚·!";
+		if((len_r = recv(sock,buf,BUF_SIZE,0))<=0)
+		DieWithError("recv()filed");*/
 	
 	if(send(sock,buf,strlen(buf),0)!=strlen(buf))
 	DieWithError("send()sent a message of unexpected bytes");
@@ -46,6 +62,11 @@ int main(int argc, char **argv){
 		commun(cliSock);
 		close(cliSock);
 	}
+	
+	while(1){
+		
+	}
+		
 	close(servSock);
 	return 0;
 }
