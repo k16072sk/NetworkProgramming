@@ -104,6 +104,4 @@ void commun(int sock)
     sprintf(buf, "%d_", balance);
     if (send(sock, buf, strlen(buf), 0) != strlen(buf))
         DieWithError("send() sent a message of inexpected bytes");
-    read_until_delim(sock, buf, '_', BUF_SIZE);
-    printf("残高は%d円になりました\n", atoi(buf));
 }
